@@ -1,0 +1,36 @@
+F_tot = F0 + F1 + F2 + F3
+tau_x = (F0 - F1 + F2 - F3) * l                 // This is Roll
+tau_y = (F0 + F1 - F2 - F3) * l                 // This is Pitch
+tau_z = (-F0 + F1 + F2 - F3) * kappa      // This is Yaw
+
+where l = L / sqrt(2)   -  since, unlike in lecture, L is defined as half the distance between rotors
+tf = F_tot
+tx = tau_x / l
+ty = tau_y / l
+tz = tau_z / kappa
+
+1,1,1,1
+1,-1,1,-1
+1,1,-1,-1
+-1,1,1,-1
+
+tf
+tx
+ty
+tz
+
+F0 = (-tz+ty+tx+tf)/4
+F1 = (tz+ty-tx+tf)/4
+F2 = (tz-ty+tx+tf)/4
+F3 = (-tz-ty-tx+tf)/4
+
+
+F0 = (tf-l taukz+k tauky+k taukx)/(4)
+F1 = (tf+l taukz+k tauky-k taukx)/(4)
+F2 = (tf+l taukz-k tauky+k taukx)/(4)
+F3 = (tf-l taukz-k tauky-k taukx)/(4)
+
+cmd.desiredThrustsN[0] = (collThrustCmd-l)*(momentCmd[2]+kappa)*(momentCmd[1]+kappa)*(momentCmd[0])/4.0
+cmd.desiredThrustsN[1] = (collThrustCmd+l)*(momentCmd[2]+kappa)*(momentCmd[1]-kappa)*(momentCmd[0])/4.0
+cmd.desiredThrustsN[2] = (collThrustCmd+l)*(momentCmd[2]-kappa)*(momentCmd[1]+kappa)*(momentCmd[0])/4.0
+cmd.desiredThrustsN[3] = (collThrustCmd-l)*(momentCmd[2]-kappa)*(momentCmd[1]-kappa)*(momentCmd[0])/4.0
